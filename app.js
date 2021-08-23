@@ -1,19 +1,19 @@
 var http = require ('http');
-//var mysql = require ('mysql');
-
-/*http.createServer (function (req,res){
-    res.writeHead (200,{'Content-Type':'text/plain'});
-    res.end ('something');
-}).listen (8080);*/
-
-/*var con = mysql.createConnection ({
-    host: "localhost",
-});*/
-
 
 const express = require ('express');
 const exphbs = require ('express-handlebars');
 const app = express ();
+const prompt = require ('prompt');
+prompt.start();
+var mysql = require('mysql2');
+
+var con = mysql.createConnection({
+  host: "localhost",
+  user: "user",
+  password:"p",
+  database: "mydb"
+});
+
 
 app.engine ('hbs',exphbs({
     defaultLayout:'main',
@@ -32,8 +32,12 @@ app.use(express.static(__dirname + '/public'));
 
 app.set ('view engine','hbs');
 
-
-/*con.connect (function(err){
+con.connect(function(err) {
     if (err) throw err;
-    console.log ("Database connected");
-})*/
+    con.query ("SELECT first_name,last_name,status FROM user", function (err,result,fields){
+        if (err) throw err;
+        console.log (result);
+    });
+    console.log("Connected!");
+});
+
